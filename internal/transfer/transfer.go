@@ -35,7 +35,7 @@ func readPrefixedMessage(r io.Reader, msg proto.Message) error {
 	varintBytes := make([]byte, binary.MaxVarintLen32)
 	n, err := io.ReadAtLeast(r, varintBytes, binary.MaxVarintLen32)
 	if err == io.EOF {
-		panic("unexpected EOF")
+		return io.ErrUnexpectedEOF
 	} else if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func readPrefixedMessage(r io.Reader, msg proto.Message) error {
 	extraLength := copy(respBytes, varintBytes[varintLength:])
 	_, err = io.ReadFull(r, respBytes[extraLength:])
 	if err == io.EOF {
-		panic("unexpected EOF")
+		return io.ErrUnexpectedEOF
 	} else if err != nil {
 		return err
 	}
