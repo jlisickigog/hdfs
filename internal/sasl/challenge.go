@@ -30,6 +30,21 @@ type Challenge struct {
 	Algorithm string
 }
 
+// HighestQopLevel extracts most secure Qop level from the list provided as an argument.
+func HighestQopLevel(qopListStr string) string {
+	// The qopList is a comma-separated list of qop values, the order of which specifies the preference order.
+	qopList := strings.Split(qopListStr, ",")
+	// Search provided list for most secure qop level.
+	for _, r := range []string{QopPrivacy, QopIntegrity, QopAuthentication} {
+		for _, qop := range qopList {
+			if qop == r {
+				return r
+			}
+		}
+	}
+	return qopListStr
+}
+
 func ParseChallenge(challenge []byte) (*Challenge, error) {
 	ch := Challenge{}
 
